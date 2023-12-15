@@ -1,12 +1,12 @@
-import {Header, Footer} from "./shared"
-const Layout = ({ children }) => {
-    return (
-        <>
-        <Header/>
-        <main>{children}</main>
-        <Footer/>
-        </>
-    )
-}
+import { Header, Footer } from "../components/shared";
 
-export default Layout
+export default function RootLayout({ children }) {
+  return (
+        <>
+        <Header />
+        <main className="mt-8">{children}</main>
+        <Footer />
+        </>
+   
+  );
+}

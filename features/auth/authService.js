@@ -8,14 +8,19 @@ const login = async (userData) => {
   return response.data;
 };
 
+const register = async (userData) => {
+  const response = await globalAxios.post("users/register", userData);
+  return response.data;
+};
+
 const logout = () => {
   localStorage.removeItem("authDetails");
-  localStorage.removeItem("currentPageUri");
 };
 
 const authService = {
   login,
   logout,
+  register,
 };
 
 export default authService;
