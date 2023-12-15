@@ -1,24 +1,24 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { store } from "../store/store";
+import store, { persistor } from "../store/store";
 import { Provider } from "react-redux";
+import { PersistGate } from "reduxjs-toolkit-persist/integration/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Layout from "../components/layout";
-import { SSRProvider } from "react-bootstrap";
+import Layout from "@/components/layout";
 
-function LiveUpApp({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
     <>
       <Provider store={store}>
-        <SSRProvider>
+        <PersistGate persistor={persistor}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
-        </SSRProvider>
+        </PersistGate>
       </Provider>
       <ToastContainer />
     </>
   );
 }
 
-export default LiveUpApp;
+export default App;
