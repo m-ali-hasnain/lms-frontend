@@ -9,16 +9,17 @@ import {
   Card,
   Spinner,
 } from "react-bootstrap";
+import Link from "next/link";
+import Head from "next/head";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
-import { navigate } from "../utils/navigate";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
-import Link from "next/link";
-import Head from "next/head";
 import { loginSchema } from "@/schemas";
+import { ADMIN } from "@/utils/roles";
+import { getCourses } from "@/features/courses/courseSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -38,26 +39,26 @@ const Login = () => {
     validationSchema: loginSchema,
 
     onSubmit: async ({ email, password }) => {
-      dispatch(login({ email, password }));
+      dispatch(login({ email, password })).unwrap().then((data)=>{
+        toast.success('Logged in successfully');
+        localStorage.setItem('authDetails', JSON.stringify(data));
+        dispatch(reset());
+        dispatch(getCourses());
+        if (data.authenticatedUser.role === ADMIN){
+          router.replace("/admin/courses");
+        }else router.replace("/student/courses")
+      }).catch((err)=>{console.log(err)});
     },
   });
+
+  useEffect(()=>{
+    const user = JSON.parse(localStorage.getItem('authDetails'));
+    if(!user) return;
+    if(user.role === ADMIN) router.replace('/admin/courses');
+    else router.replace('/student/courses')
+  }, [])
+
   const { errors, touched, values, handleChange, handleSubmit } = formik;
-
-  useEffect(() => {
-    console.log("authDetails: ", authDetails)
-    if (isSuccess || authDetails) {
-      navigate(router, authDetails?.authenticatedUser);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authDetails, isSuccess]);
-
-  useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-     dispatch(reset());
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, message]);
 
   return (
     <>
@@ -65,15 +66,13 @@ const Login = () => {
         <title>Login | LMS</title>
       </Head>
       <Container>
-        <div style={{ marginTop: "25vh" }}></div>
-        <Row className="mx-auto">
+        <Row className="mx-auto my-2">
           <Col lg={6} md={8} sm={10} className="mx-auto">
             <Card className="p-3">
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-4" controlId="email">
                   <Form.Label >Email <span className="text-danger ml-2">*</span></Form.Label>
                   <Form.Control
-                    
                     onChange={handleChange}
                     value={values.email}
                     name="email"

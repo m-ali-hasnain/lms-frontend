@@ -5,7 +5,7 @@ const useAuthorization = (expectedRole) => {
   const router = useRouter();
   useEffect(() => {
     const user = localStorage.getItem("authDetails");
-    if (!user) {
+    if (!JSON.parse(user)?.authenticatedUser) {
       toast.error("Please login to continue");
       router.replace("/login");
     } else {
