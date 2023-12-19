@@ -3,7 +3,7 @@ import { NavDropdown, Navbar, Nav } from "react-bootstrap";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { logout, resetAuthDetails, reset } from "@/features/auth/authSlice";
+import { resetAuthDetails, reset } from "@/features/auth/authSlice";
 import { useRouter } from "next/router";
 import { ADMIN, STUDENT } from "@/utils/roles";
 
@@ -16,10 +16,10 @@ function Header() {
 
   // Logout Handler
   const onLogout = (e) => {
+    localStorage.clear();
     dispatch(resetAuthDetails());
     dispatch(reset());
-    dispatch(logout());
-    router.push("/");
+    router.push("/login");
   };
 
   return (
@@ -41,11 +41,6 @@ function Header() {
                 <Nav.Item>
                   <Link className="nav-link" href="/admin/courses">
                     Courses
-                  </Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Link className="nav-link" href="/admin/students">
-                    Students
                   </Link>
                 </Nav.Item>
               </>
@@ -83,7 +78,7 @@ function Header() {
                   id="basic-nav-dropdown"
                 >
                   <NavDropdown.Item onClick={onLogout}>
-                    <Nav.Link>Logout</Nav.Link>
+                    <Nav.Item>Logout</Nav.Item>
                   </NavDropdown.Item>
                 </NavDropdown>
               </>

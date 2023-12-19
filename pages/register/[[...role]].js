@@ -36,8 +36,9 @@ const Register = ({ userRole }) => {
       promise
         .unwrap()
         .then(() => {
-          toast.success("Successfully Registered! "), dispatch(reset());
-          router.push("/login");
+          toast.success("Successfully Registered! ");
+          dispatch(reset());
+          router.replace("/login");
         })
         .catch((err) => {
           toast.error(err);
@@ -52,8 +53,7 @@ const Register = ({ userRole }) => {
         <title>Register | LMS</title>
       </Head>
       <Container>
-        <div style={{ marginTop: "25vh" }}></div>
-        <Row className="mx-auto">
+        <Row className="mx-auto my-2">
           <Col lg={6} md={8} sm={10} className="mx-auto">
             <Card className="p-3">
               <Form onSubmit={handleSubmit}>
